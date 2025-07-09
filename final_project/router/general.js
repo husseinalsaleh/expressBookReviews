@@ -157,4 +157,33 @@ public_users.get('/async-author/:author', async function (req, res) {
   }
 });
 
+// Get book details based on title using async/await with Axios
+public_users.get('/async-title/:title', async function (req, res) {
+  const title = req.params.title;
+  try {
+    // Simulate an async call to get books by title
+    const getBooksByTitle = (title) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const matchingBooks = [];
+          Object.keys(books).forEach(isbn => {
+            if (books[isbn].title.toLowerCase() === title.toLowerCase()) {
+              matchingBooks.push({ isbn, ...books[isbn] });
+            }
+          });
+          if (matchingBooks.length > 0) {
+            resolve(matchingBooks);
+          } else {
+            reject(new Error('No books found for the given title.'));
+          }
+        }, 100);
+      });
+    };
+    const booksByTitle = await getBooksByTitle(title);
+    return res.status(200).json(booksByTitle);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+});
+
 module.exports.general = public_users;
