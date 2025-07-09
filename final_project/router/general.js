@@ -105,4 +105,27 @@ public_users.get('/async-books', async function (req, res) {
   }
 });
 
+// Get book details based on ISBN using async/await with Axios
+public_users.get('/async-isbn/:isbn', async function (req, res) {
+  const isbn = req.params.isbn;
+  try {
+    // Simulate an async call to get book by ISBN
+    const getBookByISBN = (isbn) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (books[isbn]) {
+            resolve(books[isbn]);
+          } else {
+            reject(new Error('Book not found for the given ISBN.'));
+          }
+        }, 100);
+      });
+    };
+    const book = await getBookByISBN(isbn);
+    return res.status(200).json(book);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+});
+
 module.exports.general = public_users;
