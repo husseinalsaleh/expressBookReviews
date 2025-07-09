@@ -128,4 +128,33 @@ public_users.get('/async-isbn/:isbn', async function (req, res) {
   }
 });
 
+// Get book details based on author using async/await with Axios
+public_users.get('/async-author/:author', async function (req, res) {
+  const author = req.params.author;
+  try {
+    // Simulate an async call to get books by author
+    const getBooksByAuthor = (author) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const matchingBooks = [];
+          Object.keys(books).forEach(isbn => {
+            if (books[isbn].author.toLowerCase() === author.toLowerCase()) {
+              matchingBooks.push({ isbn, ...books[isbn] });
+            }
+          });
+          if (matchingBooks.length > 0) {
+            resolve(matchingBooks);
+          } else {
+            reject(new Error('No books found for the given author.'));
+          }
+        }, 100);
+      });
+    };
+    const booksByAuthor = await getBooksByAuthor(author);
+    return res.status(200).json(booksByAuthor);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+});
+
 module.exports.general = public_users;
