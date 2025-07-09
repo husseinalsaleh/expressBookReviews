@@ -29,14 +29,36 @@ public_users.get('/isbn/:isbn',function (req, res) {
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const author = req.params.author;
+  const matchingBooks = [];
+  // Iterate through all books and find those with the matching author
+  Object.keys(books).forEach(isbn => {
+    if (books[isbn].author.toLowerCase() === author.toLowerCase()) {
+      matchingBooks.push({ isbn, ...books[isbn] });
+    }
+  });
+  if (matchingBooks.length > 0) {
+    return res.status(200).json(matchingBooks);
+  } else {
+    return res.status(404).json({ message: "No books found for the given author." });
+  }
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const title = req.params.title;
+  const matchingBooks = [];
+  // Iterate through all books and find those with the matching title
+  Object.keys(books).forEach(isbn => {
+    if (books[isbn].title.toLowerCase() === title.toLowerCase()) {
+      matchingBooks.push({ isbn, ...books[isbn] });
+    }
+  });
+  if (matchingBooks.length > 0) {
+    return res.status(200).json(matchingBooks);
+  } else {
+    return res.status(404).json({ message: "No books found for the given title." });
+  }
 });
 
 //  Get book review
